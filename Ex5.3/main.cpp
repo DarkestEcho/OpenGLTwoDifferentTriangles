@@ -10,7 +10,9 @@ unsigned int createShader(unsigned int shaderType, const char** shaderSource);
 unsigned int createShaderProgram(unsigned int shaders[], int count = 0);
 void deleteShaders(unsigned int shaders[], int count = 0);
 
-void bindVertexData(unsigned int VBO, unsigned int VAO, const float vertices[], unsigned int size);
+void bindVertexData(unsigned int VBO, unsigned int VAO, const float vertices[], unsigned size);
+
+void drawTriangle(unsigned shaderProgram, unsigned VAO, int firstInd = 0, int verticesCount = 3);
 
 // settings
 constexpr unsigned int screenWidth = 800;
@@ -121,13 +123,10 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		// draw first triangle
-		glUseProgram(shaderProgramFirst);
-		glBindVertexArray(VAOs[0]);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		drawTriangle(shaderProgramFirst, VAOs[0]);
+
 		// draw second triangle
-		glUseProgram(shaderProgramSecond);
-		glBindVertexArray(VAOs[1]);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		drawTriangle(shaderProgramSecond, VAOs[1]);
 
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		// -------------------------------------------------------------------------------
@@ -227,4 +226,11 @@ void bindVertexData(unsigned int VBO, unsigned int VAO, const float vertices[], 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glBindVertexArray(0);
+}
+
+void drawTriangle(unsigned shaderProgram, unsigned VAO, int firstInd, int verticesCount)
+{
+	glUseProgram(shaderProgram);
+	glBindVertexArray(VAO);
+	glDrawArrays(GL_TRIANGLES, firstInd, verticesCount);
 }
